@@ -219,15 +219,15 @@ const LandingPage = () => {
   return (
     <div className={`min-h-screen ${isDarkTheme ? 'bg-gradient-to-br from-slate-900 to-slate-800 text-white' : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-slate-900'} transition-colors duration-500`}>
      
-
-      {/* Animated Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-      <Navbar 
+     <Navbar 
         isDarkTheme={isDarkTheme}
         toggleTheme={toggleTheme}
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
       />
+     
+      {/* Animated Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
      
         {[...Array(3)].map((_, i) => (
           <div
