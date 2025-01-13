@@ -1,17 +1,25 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
-import DiMarkHero from './component/CreativeAdLanding';
-import WorkProcessSection from './component/WorkProcessSection';
-import ServicesFaqSection from './component/ServicesFaqSection';
-import ContactFooterSection from './component/LandingPage';
-import CreativeAdLanding from './component/CreativeAdLanding';
+
 import LandingPage from './component/LandingPage';
+import AboutUs from './component/AboutUs';
+import ContactPage from "./component/ContactPage"
+import StickyContact from './component/again/StickyContact';
 function App() {
   return (
-    <div className="App">
- 
-   <LandingPage />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/services" element={<div>Services Page Coming Soon</div>} />
+          <Route path="/portfolio" element={<div>Portfolio Page Coming Soon</div>} />
+          <Route path="/contact" element={<ContactPage/>} />
+        </Routes>
+        <StickyContact />
+      </div>
+    </Router>
   );
 }
 
