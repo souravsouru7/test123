@@ -6,6 +6,7 @@ import LandingPage from './component/LandingPage';
 import AboutUs from './component/AboutUs';
 import ContactPage from "./component/ContactPage"
 import StickyContact from './component/again/StickyContact';
+import LatestWorks from './component/LatestWorks';
 function App() {
   return (
     <Router>
@@ -13,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/about" element={<AboutUs />} />
-          <Route path="/services" element={<div>Services Page Coming Soon</div>} />
+          <Route path="/LatestWorks" element={<LatestWorks />} />
           <Route path="/portfolio" element={<div>Portfolio Page Coming Soon</div>} />
           <Route path="/contact" element={<ContactPage/>} />
         </Routes>

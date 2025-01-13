@@ -163,7 +163,7 @@ const ContactPage = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-rose-500/20 to-purple-500/20 z-10 pointer-events-none" />
             <img
-              src="/api/placeholder/1920/600"
+              src="https://media.istockphoto.com/id/1513334216/photo/3d-pin-location-icon-on-map-online-order-tracking-location-mark-on-map-and-cardboard-boxes.jpg?s=1024x1024&w=is&k=20&c=ieeNsUhVDxjgSlFybqI4geWijvOvbpbXmu16xYBroJY="
               alt="Map"
               className="w-full h-[600px] object-cover"
             />

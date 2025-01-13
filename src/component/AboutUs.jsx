@@ -134,7 +134,7 @@ const AboutPage = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-rose-500 to-purple-500 rounded-2xl transform rotate-6 opacity-20 blur-xl" />
               <div className={`absolute inset-0 ${isDarkTheme ? 'bg-white/5' : 'bg-white/80'} backdrop-blur-xl rounded-2xl p-8`}>
                 <img
-                  src="/api/placeholder/400/320"
+                  src="https://media.istockphoto.com/id/1402604850/photo/the-word-about-us-on-wooden-cubes-business-communication-and-information.jpg?s=1024x1024&w=is&k=20&c=j174vsUa49_4Wpbi3w6lRUSblh5FqgHzI6F3FX7vpYE="
                   alt="Printing process"
                   className="w-full h-full object-cover rounded-xl"
                 />

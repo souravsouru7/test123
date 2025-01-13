@@ -9,8 +9,7 @@ const Navbar = ({ isDarkTheme, toggleTheme, isMobileMenuOpen, setIsMobileMenuOpe
   
   const navItems = [
     { name: 'Home', path: '/' },
-    { name: 'Services', path: '/services' },
-    { name: 'Portfolio', path: '/portfolio' },
+    { name: 'Latest Works', path: '/LatestWorks' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' }
   ];
@@ -23,16 +22,13 @@ const Navbar = ({ isDarkTheme, toggleTheme, isMobileMenuOpen, setIsMobileMenuOpe
     <nav className={`fixed w-full z-50 ${isDarkTheme ? 'bg-slate-900/80' : 'bg-white/80'} backdrop-blur-md border-b ${isDarkTheme ? 'border-white/10' : 'border-slate-200'}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-4">
-            <div className="relative w-10 h-10">
-              <div className="absolute inset-0 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg animate-pulse" />
-              <img
-                src={Logo}
-                alt="Logo"
-                className="absolute inset-0.5 w-9 h-9 rounded-lg object-cover"
-              />
-            </div>
+          {/* Updated Logo Section with larger size */}
+          <Link to="/" className="flex items-center">
+            <img
+              src={Logo}
+              alt="Logo"
+              className="w-35 h-18 object-contain" // Increased size and adjusted aspect ratio
+            />
           </Link>
           
           {/* Desktop Navigation */}
