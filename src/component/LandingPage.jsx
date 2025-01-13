@@ -120,21 +120,22 @@ const LandingPage = () => {
     <motion.div
       className={`
         absolute left-1/2 top-1/2 
-        w-full max-w-[280px] sm:w-48 md:w-64 
+        w-full max-w-[280px] sm:max-w-[220px] md:max-w-[260px] lg:max-w-[280px]
         transform-gpu perspective-1000
         -translate-x-1/2 -translate-y-1/2
       `}
       style={{
         transform: `
           rotate(${index * 60}deg)
-          translateY(-${window.innerWidth < 640 ? '100px' : '140px'})
-          scale(${window.innerWidth < 640 ? 0.7 : window.innerWidth < 768 ? 0.8 : 1})
+          translateY(-${window.innerWidth < 480 ? '80px' : window.innerWidth < 640 ? '120px' : '140px'})
+          scale(${window.innerWidth < 480 ? 0.5 : window.innerWidth < 640 ? 0.65 : window.innerWidth < 768 ? 0.8 : 1})
         `,
+        zIndex: selectedService === service ? 50 : 1
       }}
     >
       <motion.div
         className={`
-          p-6 rounded-xl backdrop-blur-md
+          p-4 sm:p-6 rounded-xl backdrop-blur-md
           bg-gradient-to-r ${service.color}
           cursor-pointer shadow-lg
           rotate-[-${index * 60}deg]
@@ -153,13 +154,13 @@ const LandingPage = () => {
           whileHover={{ scale: 1.2 }}
           transition={{ type: "spring", stiffness: 400 }}
         >
-          <service.icon className="w-8 h-8 mb-3 text-white" />
+          <service.icon className="w-6 h-6 sm:w-8 sm:h-8 mb-2 sm:mb-3 text-white" />
         </motion.div>
-        <h3 className="font-semibold text-lg text-white">{service.name}</h3>
+        <h3 className="font-semibold text-sm sm:text-lg text-white">{service.name}</h3>
       </motion.div>
     </motion.div>
   );
-
+  
   const ServiceModal = ({ service, onClose }) => (
     <motion.div
       initial={{ opacity: 0 }}
@@ -217,15 +218,11 @@ const LandingPage = () => {
 
   return (
     <div className={`min-h-screen ${isDarkTheme ? 'bg-gradient-to-br from-slate-900 to-slate-800 text-white' : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-slate-900'} transition-colors duration-500`}>
-      <Navbar 
-        isDarkTheme={isDarkTheme}
-        toggleTheme={toggleTheme}
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-      />
+     
 
       {/* Animated Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
+     
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
@@ -263,6 +260,12 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       <div className="relative min-h-screen flex items-center perspective-1000 pt-20 px-4">
+      <Navbar 
+        isDarkTheme={isDarkTheme}
+        toggleTheme={toggleTheme}
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
@@ -331,7 +334,7 @@ const LandingPage = () => {
             </div>
 
             {/* Right - Services Showcase */}
-            <div className="relative h-[300px] sm:h-[400px] md:h-[600px] mt-12 md:mt-0">
+            <div className="relative h-[250px] xs:h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] mt-8 sm:mt-12 md:mt-0">
               {services.map((service, index) => (
                 <ServiceCard
                   key={service.name}
@@ -477,6 +480,16 @@ const LandingPage = () => {
             perspective: 500px;
           }
         }
+            @media (max-width: 480px) {
+    .perspective-1000 {
+      perspective: 400px;
+    }
+  }
+      @media (min-width: 481px) and (max-width: 640px) {
+    .perspective-1000 {
+      perspective: 500px;
+    }
+  }
 
         @media (prefers-reduced-motion: reduce) {
           * {
@@ -486,6 +499,8 @@ const LandingPage = () => {
             scroll-behavior: auto !important;
           }
         }
+          
+
       `}</style>
 
       {/* Other Components */}
