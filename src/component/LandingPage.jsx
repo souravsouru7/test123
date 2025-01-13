@@ -222,6 +222,12 @@ const LandingPage = () => {
 
       {/* Animated Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      <Navbar 
+        isDarkTheme={isDarkTheme}
+        toggleTheme={toggleTheme}
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
      
         {[...Array(3)].map((_, i) => (
           <div
@@ -260,12 +266,7 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       <div className="relative min-h-screen flex items-center perspective-1000 pt-20 px-4">
-      <Navbar 
-        isDarkTheme={isDarkTheme}
-        toggleTheme={toggleTheme}
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-      />
+     
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
