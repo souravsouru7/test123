@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import LatestWorks from './again/LatestWorks';
 import ServiceShowcase from './again/ServiceShowcase';
 import Footer from './Footer';
+
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -37,7 +38,7 @@ const LandingPage = () => {
 
   const cardVariants = {
     hover: {
-      scale: 1.1,
+      scale: 1.05,
       rotate: 0,
       transition: {
         duration: 0.3,
@@ -68,9 +69,7 @@ const LandingPage = () => {
     };
   }, []);
 
-  const toggleTheme = () => {
-    setIsDarkTheme(!isDarkTheme);
-  };
+  const toggleTheme = () => setIsDarkTheme(!isDarkTheme);
 
   const services = [
     { 
@@ -117,6 +116,50 @@ const LandingPage = () => {
     }
   ];
 
+  const ServiceCard = ({ service, index, onClick }) => (
+    <motion.div
+      className={`
+        absolute left-1/2 top-1/2 
+        w-full max-w-[280px] sm:w-48 md:w-64 
+        transform-gpu perspective-1000
+        -translate-x-1/2 -translate-y-1/2
+      `}
+      style={{
+        transform: `
+          rotate(${index * 60}deg)
+          translateY(-${window.innerWidth < 640 ? '100px' : '140px'})
+          scale(${window.innerWidth < 640 ? 0.7 : window.innerWidth < 768 ? 0.8 : 1})
+        `,
+      }}
+    >
+      <motion.div
+        className={`
+          p-6 rounded-xl backdrop-blur-md
+          bg-gradient-to-r ${service.color}
+          cursor-pointer shadow-lg
+          rotate-[-${index * 60}deg]
+          hover:shadow-xl transition-shadow duration-300
+        `}
+        variants={cardVariants}
+        whileHover="hover"
+        whileTap="tap"
+        onClick={onClick}
+        style={{
+          animation: `float ${3 + index}s infinite ${index * 0.5}s`
+        }}
+      >
+        <motion.div
+          initial={{ scale: 1 }}
+          whileHover={{ scale: 1.2 }}
+          transition={{ type: "spring", stiffness: 400 }}
+        >
+          <service.icon className="w-8 h-8 mb-3 text-white" />
+        </motion.div>
+        <h3 className="font-semibold text-lg text-white">{service.name}</h3>
+      </motion.div>
+    </motion.div>
+  );
+
   const ServiceModal = ({ service, onClose }) => (
     <motion.div
       initial={{ opacity: 0 }}
@@ -146,7 +189,7 @@ const LandingPage = () => {
 
         <p className="text-white/90 mb-6">{service.description}</p>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {service.features.map((feature, index) => (
             <motion.div
               key={feature}
@@ -155,7 +198,7 @@ const LandingPage = () => {
               transition={{ delay: index * 0.1 }}
               className="flex items-center space-x-2"
             >
-              <ChevronRight className="w-4 h-4 text-white/80" />
+              <ChevronRight className="w-4 h-4 text-white/80 flex-shrink-0" />
               <span className="text-white/90">{feature}</span>
             </motion.div>
           ))}
@@ -187,7 +230,7 @@ const LandingPage = () => {
           <div
             key={i}
             className={`
-              absolute w-64 h-64 rounded-full 
+              absolute w-32 sm:w-64 h-32 sm:h-64 rounded-full 
               ${isDarkTheme ? 'opacity-30' : 'opacity-20'}
               blur-3xl
             `}
@@ -219,12 +262,12 @@ const LandingPage = () => {
       </div>
 
       {/* Hero Section */}
-      <div className="relative min-h-screen flex items-center perspective-1000 pt-20">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <div className="relative min-h-screen flex items-center perspective-1000 pt-20 px-4">
+        <div className="container mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
             <div
-              className="space-y-8 transform transition-transform duration-300"
+              className="space-y-6 sm:space-y-8 transform transition-transform duration-300"
               style={{
                 transform: `
                   translateZ(${50 + mousePosition.y * 0.5}px)
@@ -234,7 +277,7 @@ const LandingPage = () => {
               }}
             >
               <div className="relative">
-                <h1 className="text-4xl md:text-7xl font-bold leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
                   <motion.div
                     variants={container}
                     initial="hidden"
@@ -261,74 +304,41 @@ const LandingPage = () => {
                     ))}
                   </motion.div>
                 </h1>
-                <div className="absolute -top-4 -left-4 w-20 h-20 border-t-2 border-l-2 border-blue-500 animate-pulse" />
-                <div className="absolute -bottom-4 -right-4 w-20 h-20 border-b-2 border-r-2 border-rose-500 animate-pulse" />
+                <div className="absolute -top-4 -left-4 w-12 sm:w-20 h-12 sm:h-20 border-t-2 border-l-2 border-blue-500 animate-pulse" />
+                <div className="absolute -bottom-4 -right-4 w-12 sm:w-20 h-12 sm:h-20 border-b-2 border-r-2 border-rose-500 animate-pulse" />
               </div>
 
-              <p className={`text-lg md:text-xl ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'} leading-relaxed animate-fade-in`}>
+              <p className={`text-base sm:text-lg md:text-xl ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'} leading-relaxed animate-fade-in max-w-2xl`}>
                 is one of the leading Advertising Agency Sharja,
                 Dubai. We're unique and highly cost effective.
                 Join our Amazing online classes
               </p>
 
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-                <button className="group relative px-8 py-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full overflow-hidden transform hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-rose-500/25">
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-in-up">
+                <button className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full overflow-hidden transform hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-rose-500/25 w-full sm:w-auto">
                   <span className="relative z-10 flex items-center justify-center font-semibold text-white">
                     Start Project
                     <ArrowRight className="ml-2 transform group-hover:translate-x-1 transition-transform" />
                   </span>
                 </button>
 
-                <button className={`group relative px-8 py-4 border-2 ${isDarkTheme ? 'border-white/20' : 'border-slate-200'} rounded-full overflow-hidden transform hover:scale-105 transition-all duration-300 hover:border-rose-500`}>
+                <button className={`group relative px-6 sm:px-8 py-3 sm:py-4 border-2 ${isDarkTheme ? 'border-white/20' : 'border-slate-200'} rounded-full overflow-hidden transform hover:scale-105 transition-all duration-300 hover:border-rose-500 w-full sm:w-auto`}>
                   <span className="relative z-10 flex items-center justify-center font-semibold">
                     Our Showreel
                     <Play className="ml-2 w-4 h-4 transform group-hover:scale-110 transition-transform" />
-                  </span>
-                </button>
+                  </span></button>
               </div>
             </div>
 
             {/* Right - Services Showcase */}
-            <div className="relative h-[400px] md:h-[600px] mt-12 md:mt-0">
+            <div className="relative h-[300px] sm:h-[400px] md:h-[600px] mt-12 md:mt-0">
               {services.map((service, index) => (
-                <motion.div
+                <ServiceCard
                   key={service.name}
-                  className="absolute left-1/2 top-1/2 w-48 md:w-64 perspective-1000"
-                  style={{
-                    transform: `
-                      rotate(${index * 60}deg)
-                      translateY(-140px)
-                      scale(${window.innerWidth < 768 ? 0.8 : 1})
-                    `,
-                  }}
-                  initial={false}
-                >
-                  <motion.div
-                    className={`
-                      p-6 rounded-xl backdrop-blur-md
-                      bg-gradient-to-r ${service.color}
-                      cursor-pointer shadow-lg
-                      rotate-[-${index * 60}deg]
-                      hover:shadow-xl transition-shadow duration-300
-                    `}
-                    variants={cardVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                    onClick={() => setSelectedService(service)}
-                    style={{
-                      animation: `float ${3 + index}s infinite ${index * 0.5}s`
-                    }}
-                  >
-                    <motion.div
-                      initial={{ scale: 1 }}
-                      whileHover={{ scale: 1.2 }}
-                      transition={{ type: "spring", stiffness: 400 }}
-                    >
-                      <service.icon className="w-8 h-8 mb-3 text-white" />
-                    </motion.div>
-                    <h3 className="font-semibold text-lg text-white">{service.name}</h3>
-                  </motion.div>
-                </motion.div>
+                  service={service}
+                  index={index}
+                  onClick={() => setSelectedService(service)}
+                />
               ))}
             </div>
           </div>
@@ -348,34 +358,59 @@ const LandingPage = () => {
       {/* Animation Keyframes */}
       <style jsx>{`
         @keyframes float {
-          0%,@keyframes float {
-          0%, 100% { transform: translateY(0) rotate(0); }
-          50% { transform: translateY(-20px) rotate(5deg); }
+          0%, 100% { 
+            transform: translateY(0) rotate(0); 
+          }
+          50% { 
+            transform: translateY(-20px) rotate(5deg); 
+          }
         }
 
         @keyframes float-0 {
-          0%, 100% { transform: translate(-50%, -50%) scale(1); }
-          50% { transform: translate(-50%, -60%) scale(1.1); }
+          0%, 100% { 
+            transform: translate(-50%, -50%) scale(1); 
+          }
+          50% { 
+            transform: translate(-50%, -60%) scale(1.1); 
+          }
         }
 
         @keyframes float-1 {
-          0%, 100% { transform: translate(-50%, -50%) scale(1.1); }
-          50% { transform: translate(-60%, -50%) scale(1); }
+          0%, 100% { 
+            transform: translate(-50%, -50%) scale(1.1); 
+          }
+          50% { 
+            transform: translate(-60%, -50%) scale(1); 
+          }
         }
 
         @keyframes float-2 {
-          0%, 100% { transform: translate(-50%, -50%) scale(1); }
-          50% { transform: translate(-40%, -60%) scale(1.1); }
+          0%, 100% { 
+            transform: translate(-50%, -50%) scale(1); 
+          }
+          50% { 
+            transform: translate(-40%, -60%) scale(1.1); 
+          }
         }
 
         @keyframes twinkle {
-          0%, 100% { opacity: 0; transform: scale(0.5); }
-          50% { opacity: 1; transform: scale(1); }
+          0%, 100% { 
+            opacity: 0; 
+            transform: scale(0.5); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: scale(1); 
+          }
         }
 
         @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+          from { 
+            transform: rotate(0deg); 
+          }
+          to { 
+            transform: rotate(360deg); 
+          }
         }
 
         @keyframes fadeInUp {
@@ -433,7 +468,11 @@ const LandingPage = () => {
           animation: spin-slow 10s linear infinite;
         }
 
-        @media (max-width: 768px) {
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+
+        @media (max-width: 640px) {
           .perspective-1000 {
             perspective: 500px;
           }
@@ -448,9 +487,11 @@ const LandingPage = () => {
           }
         }
       `}</style>
-<LatestWorks isDarkTheme={isDarkTheme} />
-<ServiceShowcase isDarkTheme={isDarkTheme} />
-<Footer isDarkTheme={isDarkTheme} />
+
+      {/* Other Components */}
+      <LatestWorks isDarkTheme={isDarkTheme} />
+      <ServiceShowcase isDarkTheme={isDarkTheme} />
+      <Footer isDarkTheme={isDarkTheme} />
     </div>
   );
 };
