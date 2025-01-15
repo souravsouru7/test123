@@ -1,14 +1,15 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from "../logo.b54ee108340c4004ecc8.png";
 
 const Footer = ({ isDarkTheme }) => {
   const socialLinks = [
-    { icon: Facebook, href: '#' },
-    { icon: Twitter, href: '#' },
-    { icon: Instagram, href: '#' },
-    { icon: Linkedin, href: '#' }
+    { icon: Facebook, href: '#', color: 'hover:text-blue-500' },
+    { icon: Twitter, href: '#', color: 'hover:text-blue-400' },
+    { icon: Instagram, href: '#', color: 'hover:text-pink-500' },
+    { icon: Linkedin, href: '#', color: 'hover:text-blue-600' }
   ];
 
   const quickLinks = [
@@ -35,19 +36,49 @@ const Footer = ({ isDarkTheme }) => {
   ];
 
   return (
-    <footer className={`relative mt-20 ${isDarkTheme ? 'bg-slate-900/50' : 'bg-gray-50/50'} backdrop-blur-lg border-t ${isDarkTheme ? 'border-white/10' : 'border-gray-200'}`}>
-      {/* Decorative gradient blur */}
+    <footer className={`relative mt-20 ${isDarkTheme ? 'bg-slate-900/50' : 'bg-gray-50/50'} backdrop-blur-lg`}>
+      {/* Animated gradient background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -left-1/4 -top-1/4 w-1/2 h-1/2 bg-gradient-to-r from-rose-500/20 to-purple-500/20 blur-3xl rounded-full" />
-        <div className="absolute -right-1/4 -bottom-1/4 w-1/2 h-1/2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 blur-3xl rounded-full" />
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full blur-3xl opacity-20"
+            animate={{
+              x: [0, 100, 0],
+              y: [0, 50, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 10 + i * 2,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+            style={{
+              background: `radial-gradient(circle, ${
+                i === 0 ? '#4F46E5' : i === 1 ? '#7C3AED' : '#EC4899'
+              }, transparent)`,
+              width: '40%',
+              height: '40%',
+              left: `${i * 30}%`,
+              top: `${i * 20}%`,
+            }}
+          />
+        ))}
       </div>
 
-      <div className="relative container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {/* Main content */}
+      <div className="relative container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Company Info */}
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
             <Link to="/" className="block">
-              <img
+              <motion.img
+                whileHover={{ scale: 1.05 }}
                 src={Logo}
                 alt="Logo"
                 className="w-32 h-16 object-contain"
@@ -60,102 +91,157 @@ const Footer = ({ isDarkTheme }) => {
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (
-                  <a
+                  <motion.a
                     key={index}
                     href={social.href}
-                    className={`p-2 rounded-full ${isDarkTheme ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'} transition-colors duration-300`}
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    className={`p-2 rounded-full ${isDarkTheme ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'} 
+                      transition-colors duration-300 ${social.color}`}
                   >
-                    <Icon className={`w-5 h-5 ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`} />
-                  </a>
+                    <Icon className={`w-5 h-5`} />
+                  </motion.a>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+          >
+            <h3 className={`text-lg font-semibold mb-6 ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+              Quick Links
+            </h3>
             <ul className="space-y-4">
               {quickLinks.map((link, index) => (
-                <li key={index}>
+                <motion.li
+                  key={index}
+                  whileHover={{ x: 4 }}
+                >
                   <Link
                     to={link.href}
-                    className={`group flex items-center space-x-2 ${isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
+                    className={`group flex items-center space-x-2 ${
+                      isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                    } transition-colors duration-300`}
                   >
                     <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                     <span>{link.name}</span>
                   </Link>
-                </li>
+                </motion.li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Services */}
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Services</h3>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <h3 className={`text-lg font-semibold mb-6 ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+              Services
+            </h3>
             <ul className="space-y-4">
               {services.map((service, index) => (
-                <li key={index}>
+                <motion.li
+                  key={index}
+                  whileHover={{ x: 4 }}
+                >
                   <a
                     href="#"
-                    className={`group flex items-center space-x-2 ${isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
+                    className={`group flex items-center space-x-2 ${
+                      isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                    } transition-colors duration-300`}
                   >
                     <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                     <span>{service}</span>
                   </a>
-                </li>
+                </motion.li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Contact Info */}
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Contact Us</h3>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <h3 className={`text-lg font-semibold mb-6 ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+              Contact Us
+            </h3>
             <ul className="space-y-4">
-              <li>
+              <motion.li whileHover={{ x: 4 }}>
                 <a
                   href="mailto:info@creativesignatureadvertisement.com"
-                  className={`flex items-center space-x-3 ${isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
+                  className={`flex items-center space-x-3 ${
+                    isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                  } transition-colors duration-300`}
                 >
                   <Mail className="w-5 h-5" />
-                  <span>info@creativesignatureadvertisement.com</span>
+                  <span className="truncate">info@creativesignatureadvertisement.com</span>
                 </a>
-              </li>
+              </motion.li>
               {phoneNumbers.map((phone, index) => (
-                <li key={index}>
+                <motion.li key={index} whileHover={{ x: 4 }}>
                   <a
                     href={`tel:${phone.replace(/\s/g, '')}`}
-                    className={`flex items-center space-x-3 ${isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
+                    className={`flex items-center space-x-3 ${
+                      isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                    } transition-colors duration-300`}
                   >
                     <Phone className="w-5 h-5" />
                     <span>{phone}</span>
                   </a>
-                </li>
+                </motion.li>
               ))}
-              <li className={`flex items-center space-x-3 ${isDarkTheme ? 'text-gray-400' : 'text-gray-600'}`}>
+              <motion.li
+                whileHover={{ x: 4 }}
+                className={`flex items-center space-x-3 ${isDarkTheme ? 'text-gray-400' : 'text-gray-600'}`}
+              >
                 <MapPin className="w-5 h-5" />
                 <span>Muweilah sharjah, UAE</span>
-              </li>
+              </motion.li>
             </ul>
-          </div>
+          </motion.div>
         </div>
 
         {/* Bottom Bar */}
-        <div className={`mt-12 pt-8 border-t ${isDarkTheme ? 'border-white/10' : 'border-gray-200'}`}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className={`mt-12 pt-8 border-t ${isDarkTheme ? 'border-white/10' : 'border-gray-200'}`}
+        >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className={`text-sm ${isDarkTheme ? 'text-gray-400' : 'text-gray-600'}`}>
-              © {new Date().getFullYear()} Creative Signature Advertisement. All rights reserved.
+              {new Date().getFullYear()} Creative Signature Advertisement. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm">
-              <a href="#" className={`${isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}>
+              <motion.a
+                whileHover={{ y: -2 }}
+                href="#"
+                className={`${isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'} 
+                  transition-colors duration-300`}
+              >
                 Privacy Policy
-              </a>
-              <a href="#" className={`${isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}>
+              </motion.a>
+              <motion.a
+                whileHover={{ y: -2 }}
+                href="#"
+                className={`${isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'} 
+                  transition-colors duration-300`}
+              >
                 Terms of Service
-              </a>
+              </motion.a>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

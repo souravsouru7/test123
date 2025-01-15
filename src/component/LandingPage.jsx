@@ -1,10 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Camera, Paintbrush, Video, Globe, Trophy, Target, Lightbulb, Palette, PenTool, Users, ChevronRight, Play, ArrowRight, Star, Award, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Particles } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+import TextTransition, { presets } from "react-text-transition";
 import Navbar from './Navbar';
 import LatestWorks from './again/LatestWorks';
 import ServiceShowcase from './again/ServiceShowcase';
 import Footer from './Footer';
+
+const TEXTS = [
+  "Creative Excellence",
+  "Digital Innovation",
+  "Brand Success",
+  "Marketing Solutions"
+];
+
+const TYPING_TEXTS = [
+  "Digital Marketing",
+  "Brand Design",
+  "Video Production",
+  "Social Media",
+  "Web Development"
+];
 
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -13,63 +31,111 @@ const LandingPage = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  const words = "We are delighted to describe what we Do!".split(" ");
-
-  const container = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hover: {
-      scale: 1.05,
-      rotate: 0,
-      transition: {
-        duration: 0.3,
-        type: "spring",
-        stiffness: 300,
-      },
-    },
-    tap: {
-      scale: 0.95,
-      rotate: 0,
-    },
-  };
+  const [index, setIndex] = useState(0);
+  const [typingIndex, setTypingIndex] = useState(0);
+  const [typingText, setTypingText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    const intervalId = setInterval(() =>
+      setIndex(index => index + 1),
+      3000
+    );
+    return () => clearTimeout(intervalId);
   }, []);
 
-  const toggleTheme = () => setIsDarkTheme(!isDarkTheme);
+  useEffect(() => {
+    const text = TYPING_TEXTS[typingIndex];
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        setTypingText(text.substring(0, typingText.length + 1));
+        if (typingText === text) {
+          setTimeout(() => setIsDeleting(true), 1500);
+        }
+      } else {
+        setTypingText(text.substring(0, typingText.length - 1));
+        if (typingText === '') {
+          setIsDeleting(false);
+          setTypingIndex((typingIndex + 1) % TYPING_TEXTS.length);
+        }
+      }
+    }, isDeleting ? 50 : 150);
+
+    return () => clearTimeout(timeout);
+  }, [typingText, isDeleting, typingIndex]);
+
+  const particlesInit = async (engine) => {
+    await loadSlim(engine);
+  };
+
+  const particlesConfig = {
+    background: {
+      color: {
+        value: "transparent",
+      },
+    },
+    fpsLimit: 120,
+    interactivity: {
+      events: {
+        onClick: {
+          enable: true,
+          mode: "push",
+        },
+        onHover: {
+          enable: true,
+          mode: "repulse",
+        },
+      },
+      modes: {
+        push: {
+          quantity: 4,
+        },
+        repulse: {
+          distance: 200,
+          duration: 0.4,
+        },
+      },
+    },
+    particles: {
+      color: {
+        value: "#ffffff",
+      },
+      links: {
+        color: "#ffffff",
+        distance: 150,
+        enable: true,
+        opacity: 0.5,
+        width: 1,
+      },
+      move: {
+        direction: "none",
+        enable: true,
+        outModes: {
+          default: "bounce",
+        },
+        random: false,
+        speed: 2,
+        straight: false,
+      },
+      number: {
+        density: {
+          enable: true,
+          area: 800,
+        },
+        value: 80,
+      },
+      opacity: {
+        value: 0.5,
+      },
+      shape: {
+        type: "circle",
+      },
+      size: {
+        value: { min: 1, max: 5 },
+      },
+    },
+    detectRetina: true,
+  };
 
   const services = [
     { 
@@ -77,437 +143,432 @@ const LandingPage = () => {
       icon: Globe, 
       color: 'from-blue-500 to-cyan-500',
       description: 'Strategic online marketing solutions to boost your brand visibility and drive results.',
-      features: ['SEO Optimization', 'PPC Campaigns', 'Content Marketing', 'Analytics & Reporting']
+      features: ['SEO Optimization', 'PPC Campaigns', 'Content Marketing', 'Analytics & Reporting'],
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
     },
     { 
       name: 'Brand Design', 
       icon: Paintbrush, 
       color: 'from-purple-500 to-pink-500',
       description: 'Creative branding solutions that tell your story and capture your audience.',
-      features: ['Logo Design', 'Brand Guidelines', 'Visual Identity', 'Brand Strategy']
+      features: ['Logo Design', 'Brand Guidelines', 'Visual Identity', 'Brand Strategy'],
+      image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
     },
     { 
       name: 'Video Production', 
       icon: Video, 
       color: 'from-red-500 to-orange-500',
       description: 'Professional video content that engages and inspires your audience.',
-      features: ['Commercial Videos', 'Social Media Content', 'Motion Graphics', 'Video Editing']
-    },
-    { 
-      name: 'Social Media', 
-      icon: Users, 
-      color: 'from-green-500 to-emerald-500',
-      description: 'Comprehensive social media management to build your online presence.',
-      features: ['Content Creation', 'Community Management', 'Social Strategy', 'Analytics']
-    },
-    { 
-      name: 'UI/UX Design', 
-      icon: PenTool, 
-      color: 'from-yellow-500 to-amber-500',
-      description: 'User-centered design solutions for digital products and services.',
-      features: ['User Research', 'Wireframing', 'Prototyping', 'User Testing']
-    },
-    { 
-      name: 'Creative Strategy', 
-      icon: Lightbulb, 
-      color: 'from-indigo-500 to-violet-500',
-      description: 'Strategic creative solutions to solve complex business challenges.',
-      features: ['Market Research', 'Campaign Planning', 'Creative Direction', 'Brand Positioning']
+      features: ['Commercial Videos', 'Social Media Content', 'Motion Graphics', 'Video Editing'],
+      image: 'https://images.unsplash.com/photo-1579632652768-6cb9dcf85912?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
     }
   ];
 
-  const ServiceCard = ({ service, index, onClick }) => (
-    <motion.div
-      className={`
-        absolute left-1/2 top-1/2 
-        w-full max-w-[280px] sm:max-w-[220px] md:max-w-[260px] lg:max-w-[280px]
-        transform-gpu perspective-1000
-        -translate-x-1/2 -translate-y-1/2
-      `}
-      style={{
-        transform: `
-          rotate(${index * 60}deg)
-          translateY(-${window.innerWidth < 480 ? '80px' : window.innerWidth < 640 ? '120px' : '140px'})
-          scale(${window.innerWidth < 480 ? 0.5 : window.innerWidth < 640 ? 0.65 : window.innerWidth < 768 ? 0.8 : 1})
-        `,
-        zIndex: selectedService === service ? 50 : 1
-      }}
-    >
-      <motion.div
-        className={`
-          p-4 sm:p-6 rounded-xl backdrop-blur-md
-          bg-gradient-to-r ${service.color}
-          cursor-pointer shadow-lg
-          rotate-[-${index * 60}deg]
-          hover:shadow-xl transition-shadow duration-300
-        `}
-        variants={cardVariants}
-        whileHover="hover"
-        whileTap="tap"
-        onClick={onClick}
-        style={{
-          animation: `float ${3 + index}s infinite ${index * 0.5}s`
-        }}
-      >
-        <motion.div
-          initial={{ scale: 1 }}
-          whileHover={{ scale: 1.2 }}
-          transition={{ type: "spring", stiffness: 400 }}
-        >
-          <service.icon className="w-6 h-6 sm:w-8 sm:h-8 mb-2 sm:mb-3 text-white" />
-        </motion.div>
-        <h3 className="font-semibold text-sm sm:text-lg text-white">{service.name}</h3>
-      </motion.div>
-    </motion.div>
-  );
-  
-  const ServiceModal = ({ service, onClose }) => (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.8, y: 50 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.8, y: 50 }}
-        className={`relative w-full max-w-lg p-6 rounded-2xl bg-gradient-to-r ${service.color} shadow-xl`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-white/80 hover:text-white"
-        >
-          <X className="w-6 h-6" />
-        </button>
-
-        <div className="flex items-center mb-6">
-          <service.icon className="w-10 h-10 text-white mr-4" />
-          <h3 className="text-2xl font-bold text-white">{service.name}</h3>
-        </div>
-
-        <p className="text-white/90 mb-6">{service.description}</p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {service.features.map((feature, index) => (
-            <motion.div
-              key={feature}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="flex items-center space-x-2"
-            >
-              <ChevronRight className="w-4 h-4 text-white/80 flex-shrink-0" />
-              <span className="text-white/90">{feature}</span>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="mt-8 w-full py-3 px-6 bg-white/20 hover:bg-white/30 rounded-lg text-white font-semibold backdrop-blur-sm transition-colors"
-        >
-          Learn More
-        </motion.button>
-      </motion.div>
-    </motion.div>
-  );
+  const toggleTheme = () => {
+    setIsDarkTheme(!isDarkTheme);
+  };
 
   return (
-    <div className={`min-h-screen ${isDarkTheme ? 'bg-gradient-to-br from-slate-900 to-slate-800 text-white' : 'bg-gradient-to-br from-gray-50 via-white to-gray-100 text-slate-900'} transition-colors duration-500`}>
-     
-     <Navbar 
-        isDarkTheme={isDarkTheme}
-        toggleTheme={toggleTheme}
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-      />
-     
-      {/* Animated Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-     
-        {[...Array(3)].map((_, i) => (
-          <div
-            key={i}
-            className={`
-              absolute w-32 sm:w-64 h-32 sm:h-64 rounded-full 
-              ${isDarkTheme ? 'opacity-30' : 'opacity-20'}
-              blur-3xl
-            `}
-            style={{
-              background: `radial-gradient(circle, ${i === 0 ? 'rgba(244,63,94,0.3)' :
-                i === 1 ? 'rgba(99,102,241,0.3)' :
-                  'rgba(236,72,153,0.3)'
-                } 0%, transparent 70%)`,
-              left: `${i * 30}%`,
-              top: `${i * 20}%`,
-              transform: `translate(-50%, -50%) rotate(${scrollY * 0.1}deg)`,
-              animation: `float-${i} ${8 + i * 2}s infinite`
-            }}
+    <div className={`min-h-screen ${isDarkTheme ? 'bg-gradient-to-b from-gray-900 to-black text-white' : 'bg-gradient-to-b from-gray-50 to-white text-gray-900'} overflow-hidden`}>
+      {/* Background Images */}
+      <div className="fixed inset-0 z-0">
+        <div className={`absolute inset-0 bg-gradient-to-b ${isDarkTheme ? 'from-gray-900/90 to-black/90' : 'from-gray-50/90 to-white/90'} z-10`} />
+        <motion.div
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: isDarkTheme ? 0.3 : 0.1 }}
+          transition={{ duration: 1 }}
+          className="absolute inset-0"
+        >
+          <img
+            src={isDarkTheme 
+              ? "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80"
+              : "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80"
+            }
+            alt="Background"
+            className="w-full h-full object-cover"
           />
-        ))}
-
-        {isDarkTheme && [...Array(30)].map((_, i) => (
-          <div
-            key={`dot-${i}`}
-            className="absolute w-1 h-1 bg-white rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              opacity: Math.random() * 0.5,
-              animation: `twinkle ${2 + Math.random() * 4}s infinite ${Math.random() * 2}s`
-            }}
-          />
-        ))}
+        </motion.div>
       </div>
 
-      {/* Hero Section */}
-      <div className="relative min-h-screen flex items-center perspective-1000 pt-20 px-4">
-     
-        <div className="container mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div
-              className="space-y-6 sm:space-y-8 transform transition-transform duration-300"
-              style={{
-                transform: `
-                  translateZ(${50 + mousePosition.y * 0.5}px)
-                  rotateX(${mousePosition.y * 0.05}deg)
-                  rotateY(${mousePosition.x * 0.05}deg)
-                `
-              }}
-            >
-              <div className="relative">
-                <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                  <motion.div
-                    variants={container}
-                    initial="hidden"
-                    animate="visible"
-                    className="flex flex-wrap gap-x-4"
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        options={{
+          ...particlesConfig,
+          particles: {
+            ...particlesConfig.particles,
+            color: {
+              value: isDarkTheme ? "#ffffff" : "#000000"
+            },
+            links: {
+              ...particlesConfig.particles.links,
+              color: isDarkTheme ? "#ffffff" : "#000000",
+            }
+          }
+        }}
+        className="absolute inset-0 z-10"
+      />
+      
+      <div className="relative z-20">
+        <Navbar 
+          isDarkTheme={isDarkTheme}
+          toggleTheme={toggleTheme}
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
+        />
+
+        {/* Hero Section */}
+        <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={i}
+                className={`absolute rounded-full blur-3xl ${isDarkTheme ? 'opacity-30' : 'opacity-20'}`}
+                animate={{
+                  x: [0, 100, 0],
+                  y: [0, 50, 0],
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 180, 360],
+                }}
+                transition={{
+                  duration: 15 + i * 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "linear",
+                }}
+                style={{
+                  background: `radial-gradient(circle, ${
+                    isDarkTheme
+                      ? i === 0 ? '#4F46E5' : i === 1 ? '#7C3AED' : i === 2 ? '#EC4899' : i === 3 ? '#3B82F6' : '#10B981'
+                      : i === 0 ? '#60A5FA' : i === 1 ? '#A78BFA' : i === 2 ? '#F472B6' : i === 3 ? '#34D399' : '#FCD34D'
+                  }, transparent)`,
+                  width: '40%',
+                  height: '40%',
+                  left: `${i * 20}%`,
+                  top: `${i * 15}%`,
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
+                className="text-center relative"
+              >
+                {/* 3D Floating Elements */}
+                <div className="absolute inset-0 -z-10">
+                  {[...Array(8)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className={`absolute ${isDarkTheme ? 'opacity-60' : 'opacity-40'}`}
+                      animate={{
+                        y: [0, -20, 0],
+                        x: [0, 10, 0],
+                        rotate: [0, 360],
+                        scale: [1, 1.1, 1],
+                      }}
+                      transition={{
+                        duration: 5 + i,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        ease: "easeInOut",
+                      }}
+                      style={{
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                      }}
+                    >
+                      {[
+                        <Star className="w-6 h-6" />,
+                        <Award className="w-8 h-8" />,
+                        <Trophy className="w-7 h-7" />,
+                        <Target className="w-6 h-6" />
+                      ][i % 4]}
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Main Title */}
+                <motion.div
+                  className="relative mb-6 perspective-1000"
+                  animate={{
+                    rotateX: [0, 5, 0],
+                    rotateY: [0, 10, 0],
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                >
+                  <h1 className={`text-6xl md:text-8xl font-bold mb-6 ${
+                    isDarkTheme 
+                      ? 'bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500' 
+                      : 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600'
+                  } bg-clip-text text-transparent transform-gpu`}>
+                    <TextTransition springConfig={presets.wobbly}>
+                      {TEXTS[index % TEXTS.length]}
+                    </TextTransition>
+                  </h1>
+                </motion.div>
+
+                {/* Typing Text */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="mb-12"
+                >
+                  <h2 className={`text-3xl md:text-4xl ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
+                    Empowering Your Business with{' '}
+                    <span className={`font-semibold ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+                      {typingText}
+                    </span>
+                    <span className="animate-blink">|</span>
+                  </h2>
+                </motion.div>
+
+                {/* CTA Buttons */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  className="flex flex-col sm:flex-row items-center justify-center gap-6"
+                >
+                  <motion.button
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: "0 20px 40px rgba(236, 72, 153, 0.3)",
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`group relative px-10 py-5 rounded-2xl font-semibold text-white
+                      bg-gradient-to-r from-rose-500 to-pink-500 overflow-hidden
+                      transform perspective-1000`}
                   >
-                    {words.map((word, index) => (
-                      <motion.span
-                        key={index}
-                        variants={item}
-                        className="inline-block transform hover:scale-110 transition-all duration-300
-                         hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r from-pink-500 to-violet-500
-                         cursor-pointer"
-                        whileHover={{
-                          rotate: [-2, 2, -2],
-                          transition: {
-                            duration: 0.5,
-                            repeat: Infinity,
-                          },
-                        }}
-                      >
-                        {word}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                </h1>
-                <div className="absolute -top-4 -left-4 w-12 sm:w-20 h-12 sm:h-20 border-t-2 border-l-2 border-blue-500 animate-pulse" />
-                <div className="absolute -bottom-4 -right-4 w-12 sm:w-20 h-12 sm:h-20 border-b-2 border-r-2 border-rose-500 animate-pulse" />
-              </div>
+                    <motion.div
+                      className="absolute inset-0 bg-white/30 transform -skew-x-12"
+                      initial={{ x: "100%" }}
+                      whileHover={{ x: "-100%" }}
+                      transition={{ duration: 0.7 }}
+                    />
+                    <span className="relative flex items-center justify-center space-x-2">
+                      <span>Get Started</span>
+                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </motion.button>
 
-              <p className={`text-base sm:text-lg md:text-xl ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'} leading-relaxed animate-fade-in max-w-2xl`}>
-                is one of the leading Advertising Agency Sharja,
-                Dubai. We're unique and highly cost effective.
-                Join our Amazing online classes
-              </p>
+                  <motion.button
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: isDarkTheme 
+                        ? "0 20px 40px rgba(255, 255, 255, 0.1)"
+                        : "0 20px 40px rgba(0, 0, 0, 0.1)",
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`group relative px-10 py-5 rounded-2xl font-semibold
+                      ${isDarkTheme 
+                        ? 'bg-white/10 hover:bg-white/20 text-white' 
+                        : 'bg-black/5 hover:bg-black/10 text-gray-900'}
+                      backdrop-blur-lg transform perspective-1000
+                      border border-transparent hover:border-current`}
+                  >
+                    <span className="relative flex items-center justify-center space-x-2">
+                      <Play className="w-5 h-5" />
+                      <span>Watch Demo</span>
+                    </span>
+                  </motion.button>
+                </motion.div>
 
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-in-up">
-                <button className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full overflow-hidden transform hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-rose-500/25 w-full sm:w-auto">
-                  <span className="relative z-10 flex items-center justify-center font-semibold text-white">
-                    Start Project
-                    <ArrowRight className="ml-2 transform group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </button>
-
-                <button className={`group relative px-6 sm:px-8 py-3 sm:py-4 border-2 ${isDarkTheme ? 'border-white/20' : 'border-slate-200'} rounded-full overflow-hidden transform hover:scale-105 transition-all duration-300 hover:border-rose-500 w-full sm:w-auto`}>
-                  <span className="relative z-10 flex items-center justify-center font-semibold">
-                    Our Showreel
-                    <Play className="ml-2 w-4 h-4 transform group-hover:scale-110 transition-transform" />
-                  </span></button>
-              </div>
+                {/* Scroll Indicator */}
+                <motion.div
+                  className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+                  animate={{
+                    y: [0, 10, 0],
+                    opacity: [0.5, 1, 0.5],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <ChevronRight 
+                    className={`w-8 h-8 rotate-90 ${
+                      isDarkTheme ? 'text-white/50' : 'text-gray-900/50'
+                    }`}
+                  />
+                </motion.div>
+              </motion.div>
             </div>
+          </div>
+        </div>
 
-            {/* Right - Services Showcase */}
-            <div className="relative h-[250px] xs:h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] mt-8 sm:mt-12 md:mt-0">
+        {/* Services Section */}
+        <div className={`py-20 ${isDarkTheme ? 'bg-black/50' : 'bg-white/50'} backdrop-blur-lg`}>
+          <div className="container mx-auto">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className={`text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r ${
+                isDarkTheme 
+                  ? 'from-blue-400 via-purple-500 to-pink-500' 
+                  : 'from-blue-600 via-purple-600 to-pink-600'
+              } bg-clip-text text-transparent`}
+            >
+              Our Services
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className={`text-center mb-12 text-lg ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}
+            >
+              Comprehensive solutions for your digital needs
+            </motion.p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {services.map((service, index) => (
-                <ServiceCard
+                <motion.div
                   key={service.name}
-                  service={service}
-                  index={index}
-                  onClick={() => setSelectedService(service)}
-                />
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.2 }}
+                  whileHover={{ y: -5 }}
+                  className={`group p-6 rounded-2xl ${
+                    isDarkTheme 
+                      ? 'bg-white/5 hover:bg-white/10' 
+                      : 'bg-white hover:bg-gray-50'
+                  } backdrop-blur-lg transition-all duration-300 cursor-pointer
+                    border border-transparent hover:border-rose-500/20`}
+                >
+                  <div className="mb-4">
+                    <service.icon className={`w-12 h-12 ${isDarkTheme ? 'text-white' : 'text-gray-900'}`} />
+                  </div>
+                  <h3 className={`text-2xl font-bold mb-4 ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+                    {service.name}
+                  </h3>
+                  <p className={`mb-6 ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
+                    {service.description}
+                  </p>
+                  <ul className="space-y-2 mb-6">
+                    {service.features.map((feature, i) => (
+                      <motion.li
+                        key={feature}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 + (i * 0.1) }}
+                        className={`flex items-center space-x-2 ${
+                          isDarkTheme ? 'text-gray-300' : 'text-gray-600'
+                        }`}
+                      >
+                        <ChevronRight className="w-4 h-4 text-rose-500" />
+                        <span>{feature}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                  <motion.button
+                    whileHover={{ x: 5 }}
+                    className={`w-full py-3 px-6 rounded-xl 
+                      ${isDarkTheme 
+                        ? 'bg-white/10 hover:bg-white/20 text-white' 
+                        : 'bg-gray-900/10 hover:bg-gray-900/20 text-gray-900'}
+                      backdrop-blur-lg transition-all duration-300
+                      flex items-center justify-center space-x-2`}
+                  >
+                    <span>Learn More</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.button>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
+
+        {/* Latest Works Section */}
+        <LatestWorks isDarkTheme={isDarkTheme} />
+
+        {/* Service Showcase Section */}
+        <ServiceShowcase isDarkTheme={isDarkTheme} />
+
+        {/* Modal */}
+        <AnimatePresence>
+          {selectedService && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+              onClick={() => setSelectedService(null)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 20, rotateX: -20 }}
+                animate={{ scale: 1, y: 0, rotateX: 0 }}
+                exit={{ scale: 0.9, y: 20, rotateX: 20 }}
+                className={`relative w-full max-w-lg p-8 rounded-2xl bg-gradient-to-br ${selectedService.color} shadow-2xl overflow-hidden`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <motion.div
+                  className="absolute inset-0 opacity-20"
+                  initial={{ scale: 1.2 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+                >
+                  <img 
+                    src={selectedService.image} 
+                    alt={selectedService.name}
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+
+                <div className="relative z-10">
+                  <button
+                    onClick={() => setSelectedService(null)}
+                    className="absolute top-4 right-4 text-white/80 hover:text-white"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+
+                  <div className="flex items-center mb-6">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    >
+                      <selectedService.icon className="w-12 h-12 text-white mr-4" />
+                    </motion.div>
+                    <h3 className="text-2xl font-bold text-white">{selectedService.name}</h3>
+                  </div>
+
+                  <p className="text-white/90 mb-8">{selectedService.description}</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {selectedService.features.map((feature, index) => (
+                      <motion.div
+                        key={feature}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-center space-x-2"
+                      >
+                        <ChevronRight className="w-5 h-5 text-white/70" />
+                        <span className="text-white/90">{feature}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <Footer isDarkTheme={isDarkTheme} />
       </div>
-
-      {/* Modal */}
-      <AnimatePresence>
-        {selectedService && (
-          <ServiceModal 
-            service={selectedService} 
-            onClose={() => setSelectedService(null)} 
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Animation Keyframes */}
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { 
-            transform: translateY(0) rotate(0); 
-          }
-          50% { 
-            transform: translateY(-20px) rotate(5deg); 
-          }
-        }
-
-        @keyframes float-0 {
-          0%, 100% { 
-            transform: translate(-50%, -50%) scale(1); 
-          }
-          50% { 
-            transform: translate(-50%, -60%) scale(1.1); 
-          }
-        }
-
-        @keyframes float-1 {
-          0%, 100% { 
-            transform: translate(-50%, -50%) scale(1.1); 
-          }
-          50% { 
-            transform: translate(-60%, -50%) scale(1); 
-          }
-        }
-
-        @keyframes float-2 {
-          0%, 100% { 
-            transform: translate(-50%, -50%) scale(1); 
-          }
-          50% { 
-            transform: translate(-40%, -60%) scale(1.1); 
-          }
-        }
-
-        @keyframes twinkle {
-          0%, 100% { 
-            opacity: 0; 
-            transform: scale(0.5); 
-          }
-          50% { 
-            opacity: 1; 
-            transform: scale(1); 
-          }
-        }
-
-        @keyframes spin-slow {
-          from { 
-            transform: rotate(0deg); 
-          }
-          to { 
-            transform: rotate(360deg); 
-          }
-        }
-
-        @keyframes fadeInUp {
-          from { 
-            opacity: 0; 
-            transform: translateY(20px); 
-          }
-          to { 
-            opacity: 1; 
-            transform: translateY(0); 
-          }
-        }
-
-        @keyframes pulse {
-          0%, 100% { 
-            transform: scale(1); 
-            opacity: 0.3; 
-          }
-          50% { 
-            transform: scale(1.1); 
-            opacity: 0.1; 
-          }
-        }
-
-        @keyframes animate-fade-in {
-          from { 
-            opacity: 0; 
-          }
-          to { 
-            opacity: 1; 
-          }
-        }
-
-        @keyframes animate-fade-in-up {
-          from { 
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to { 
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-in {
-          animation: animate-fade-in 0.5s ease-out forwards;
-        }
-
-        .animate-fade-in-up {
-          animation: animate-fade-in-up 0.5s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-spin-slow {
-          animation: spin-slow 10s linear infinite;
-        }
-
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-
-        @media (max-width: 640px) {
-          .perspective-1000 {
-            perspective: 500px;
-          }
-        }
-            @media (max-width: 480px) {
-    .perspective-1000 {
-      perspective: 400px;
-    }
-  }
-      @media (min-width: 481px) and (max-width: 640px) {
-    .perspective-1000 {
-      perspective: 500px;
-    }
-  }
-
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-            scroll-behavior: auto !important;
-          }
-        }
-          
-
-      `}</style>
-
-      {/* Other Components */}
-      <LatestWorks isDarkTheme={isDarkTheme} />
-      <ServiceShowcase isDarkTheme={isDarkTheme} />
-      <Footer isDarkTheme={isDarkTheme} />
     </div>
   );
 };
